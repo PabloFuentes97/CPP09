@@ -7,7 +7,7 @@ int	main(int argc, char **argv)
 	try
 	{
 		sortNumbersDeque(&argv[1]);
-		sortNumbersList(&argv[1]);
+		//sortNumbersList(&argv[1]);
 	}
 	catch(const std::exception& e)
 	{

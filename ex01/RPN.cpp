@@ -1,7 +1,4 @@
-#include <string>
-#include <sstream>
-#include <iostream>
-#include <stack>
+#include "RPN.hpp"
 
 int strcmpDict(std::string str, std::string dict)
 {
@@ -73,36 +70,36 @@ int RPN(std::string args)
     {
         if (token.size() > 1 || !strcmpDict(token, "0123456789+-*/"))
         {
-            std::cout << "Error. Bad argument format!" << std::endl; //cambiar por excepción
-            return (0);
+            std::cout << "Error. Bad argument format!" << std::endl;
+            return (1);
         }
         if (strcmpDict(token, "0123456789"))
+        {
+            int num = strToInt(token);
+            if (num >= 10)
+            {
+                std::cout << "Error. Number too large!" << std::endl;
+                return (2);
+            }
             calculator.push(strToInt(token));
+        }
+            
         else
         {
             if (calculator.size() < 2)
             {
-                std::cout << "Error. Not enough numbers to operate!" << std::endl; //cambiar por excepción
-                return (0);
+                std::cout << "Error. Not enough numbers to operate!" << std::endl;
+                return (3);
             }
             if (!RPNOperations(calculator, token[0]))
-                return (0);
+                return (4);
         }
     }
     if (calculator.size() > 1)
     {
-        std::cout << "Error. Too many numbers to operate!" << std::endl; //cambiar por excepción
-        return (0);
+        std::cout << "Error. Too many numbers to operate!" << std::endl;
+        return (5);
     }
     std::cout << calculator.top() << std::endl;
-    return (1);
-}
-
-int main(int argc, char **argv)
-{
-    if (argc != 2)
-        return (1);
-
-    RPN(argv[1]);
     return (0);
 }

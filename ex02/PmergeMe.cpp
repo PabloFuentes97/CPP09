@@ -99,7 +99,7 @@ void	printDeque(itq start, itq end)
 	std::cout << std::endl;
 }
 
-void	cpyDeque(itq	srcStart, itq srcEnd, itq destStart, itq destEnd)
+void	cpyDeque(itq srcStart, itq srcEnd, itq destStart, itq destEnd)
 {
 	while (srcStart != srcEnd && destStart != destEnd)
 	{
@@ -116,15 +116,10 @@ void	recursiveInsertSort(std::deque<std::pair<int, int> > &deque, size_t n)
 	recursiveInsertSort(deque, n - 1);
 	std::pair<int, int> last = deque[n - 1];
 	deque.erase(deque.begin() + (n - 1));
-	//int	i = n - 2;
 	int	i = n - 2;
 	while (i >= 0 && deque[i].second > last.second)
-	{
-		//deque[i + 1] = deque[i];
 		i--;
-	}
 	deque.insert(deque.begin() + i + 1, last);
-	//deque[i + 1] = last;
 }
 
 typedef std::deque<int>::iterator itdeque;
@@ -133,21 +128,11 @@ void    binaryInsertionDeque(std::deque<int> &deq, itdeque const &begin, itdeque
     size_t  len = distance(begin, end);
     if (len == 0)
     {
-        /*if (deq.begin() == begin)
-            deq.push_front(num);
-        else if (deq.end() == end)
-            deq.push_back(num);
-		*/
 		deq.insert(begin, num);
         return ;
     }
     size_t	find = len / 2;
     itdeque	itf = begin + find;
-    /*if (*itf == num ||(*itf < num && num < *(itf + 1)))  
-    {
-        deq.insert(itf + 1, num);
-        return ;
-    }*/
     if (num < *itf)
         binaryInsertionDeque(deq, begin, itf, num);
     else
@@ -183,10 +168,8 @@ void	mergeInsertFordJohnson(std::deque<int> &deque)
 		straggler = true;
 	if (straggler)
 	{
-		//std::cout << "Número impar" << std::endl;
 		straggler_n = *(deque.end() - 1);
 		deque.pop_back();
-		//std::cout << "Número impar quitado" << std::endl;
 	}
 	//crear lista con parejas
 	std::deque<std::pair<int,int > >	pairs;
@@ -197,23 +180,12 @@ void	mergeInsertFordJohnson(std::deque<int> &deque)
 		if (pairs[i].first > pairs[i].second)
 		{
 			std::swap(pairs[i].first, pairs[i].second);
-			/*int	swap = pairs[i].first;
-			pairs[i].first = pairs[i].second;
-			pairs[i].second = swap;*/
 		}
 		i++;
 	}
 
 	//ordenar lista de parejas
-	/*std::cout << "Parejas sin ordenar" << std::endl;
-	for (itpairs itb = pairs.begin(), ite = pairs.end(); itb != ite; itb++)
-		std::cout << "[" << itb->first << ", " << itb->second << "]" << std::endl;
-	*/
 	recursiveInsertSort(pairs, pairs.size());
-	/*std::cout << "Parejas ordenadas" << std::endl;
-	for (itpairs itb = pairs.begin(), ite = pairs.end(); itb != ite; itb++)
-		std::cout << "[" << itb->first << ", " << itb->second << "]" << std::endl;
-	*/
 
 	//crear lista o cadena de 'a' (elemento mayor, cadena principal) y de 'b' (elemento menor)
 	std::deque<int> a;
@@ -223,15 +195,7 @@ void	mergeInsertFordJohnson(std::deque<int> &deque)
 		a.push_back(itb->second);
 		b.push_back(itb->first);
 	}
-	/*
-	std::cout << "Lista de 'a' (elementos mayores)" << std::endl;
-	for (itdeque itb = a.begin(), ite = a.end(); itb != ite; itb++)
-		std::cout << *itb << std::endl;
-	std::cout << "Lista de 'b' (elementos menores)" << std::endl;
-	for (itdeque itb = b.begin(), ite = b.end(); itb != ite; itb++)
-		std::cout << *itb << " " << std::endl;
-	*/
-	//meto primer elemento de b (el menor de todos) al principio de a - ya sé que debe ser siempre el primero
+	//meto primer elemento de b (el menor de todos) al principio de a
 	a.push_front(b[0]);
 	b.pop_front();
 
@@ -239,10 +203,7 @@ void	mergeInsertFordJohnson(std::deque<int> &deque)
 	std::deque<int> jacobsthalSeq;
 	size_t	bSize =  b.size();
 	generateJacobsthalSequenceDeque(jacobsthalSeq, bSize);
-	/*std::cout << "Secuencia de Jacobsthal" << std::endl;
-	for (itdeque ib = jacobsthalSeq.begin(), ie = jacobsthalSeq.end(); ib != ie; ib++)
-		std::cout << *ib << std::endl;
-	*/
+
 	std::deque<int>	indexes;
 	for (itdeque	itb = jacobsthalSeq.begin(), ite = jacobsthalSeq.end(); itb != ite; itb++)
 	{
@@ -250,18 +211,11 @@ void	mergeInsertFordJohnson(std::deque<int> &deque)
 		if (*itb < bSize)
 			indexes.push_back(*itb);
 	}
-	/*std::cout << "Orden de índices a insertar" << std::endl;
-	for (itdeque ib = indexes.begin(), ie = indexes.end(); ib != ie; ib++)
-		std::cout << *ib << std::endl;
-	std::cout << "Longitud de b: " << b.size() << " Longitud de índices: " << indexes.size() << std::endl;
-	*/
-	//insercion binaria
+	//binary
 	int	pairIndex = 0;
 	for (itdeque ib = indexes.begin(), ie = indexes.end(); ib != ie; ib++, pairIndex++)
 	{
-		//itq		lim = std::find(a.begin(), a.end(), pairs[pairIndex].second);
 		binaryInsertionDeque(a, a.begin(), a.end(), b[*ib]);
-		//binaryInsertionDeque(a, a.begin(), lim + 1, b[*ib]);
 	}
 		
 	if (straggler)
@@ -269,6 +223,16 @@ void	mergeInsertFordJohnson(std::deque<int> &deque)
 	//copio deck 'a' ordenado a deck original
 	for (itdeque itb = a.begin(), ite = a.end(), itc = deque.begin(); itb != ite; itb++, itc++)
 		*itc = *itb;
+}
+
+bool	isSortedDeque(std::deque<int> &deq)
+{
+	for (itdeque itb = deq.begin(), ite = deq.end() - 1; itb != ite; itb++)
+	{
+		if (*itb > *(itb + 1))
+			return (false);
+	}
+	return (true);
 }
 
 void	sortNumbersDeque(char **args)
@@ -285,9 +249,7 @@ void	sortNumbersDeque(char **args)
 	if (nums.empty())
 		return ;
 	timeAfter = getCurrTimeMicrosec();
-	/*std::cout << "Tiempo 1: " << timeBef << " Tiempo 2: " << timeAfter << " Diferencia: "
-		<< timeAfter - timeBef << std::endl;*/
-	std::cout << "Time to perform parsing: " << (double)(timeAfter - timeBef) / 1000 << std::endl;
+	std::cout << "Time to perform parsing: " << (double)(timeAfter - timeBef) / 1000 << " ms" << std::endl;
 
 	//SORT
 	std::cout << "Before: ";
@@ -295,11 +257,14 @@ void	sortNumbersDeque(char **args)
 	timeBef = getCurrTimeMicrosec();
 	mergeInsertFordJohnson(nums);
 	timeAfter = getCurrTimeMicrosec();
-	/*std::cout << "Tiempo 1: " << timeBef << " Tiempo 2: " << timeAfter << " Diferencia: "
-		<< timeAfter - timeBef << std::endl;*/
-	std::cout << "Time to perform sorting: " << (double)(timeAfter - timeBef) / 1000 << std::endl;
+	std::cout << "Time to perform sorting: " << (double)(timeAfter - timeBef) / 1000 << " ms" << std::endl;
 	std::cout << "After: ";
 	printDeque(nums.begin(), nums.end());
+	/*if (isSortedDeque(nums))
+		std::cout << "Is sorted!" << std::endl;
+	else
+		std::cout << "Isn't sorted!" << std::endl;
+	*/
 }
 
 //-------------------------LIST-------------------------
@@ -377,38 +342,24 @@ void	recursiveInsertSort(std::list<std::pair<int, int> > &list, size_t n)
 	recursiveInsertSort(list, n - 1);
 	std::pair<int, int> last = *nextItplList(list.begin(), n - 1);
 	list.erase(nextItplList(list.begin(), n - 1));
-	//int	i = n - 2;
 	int	i = n - 2;
 	while (i >= 0 && (*nextItplList(list.begin(), i)).second > last.second)
 	{
-		//list[i + 1] = list[i];
 		i--;
 	}
 	list.insert(nextItplList(list.begin(), i + 1), last);
-	//list[i + 1] = last;
 }
 
-typedef std::list<int>::iterator itl;
 void    binaryInsertionlist(std::list<int> &list, itl const &begin, itl const &end, int num)
 {
     size_t  len = distance(begin, end);
     if (len == 0)
     {
-        /*if (deq.begin() == begin)
-            deq.push_front(num);
-        else if (deq.end() == end)
-            deq.push_back(num);
-		*/
 		list.insert(begin, num);
         return ;
     }
     size_t	find = len / 2;
     itl	itf = nextItlList(begin, find);
-    /*if (*itf == num ||(*itf < num && num < *(itf + 1)))  
-    {
-        deq.insert(itf + 1, num);
-        return ;
-    }*/
     if (num < *itf)
         binaryInsertionlist(list, begin, itf, num);
     else
@@ -445,10 +396,8 @@ void	mergeInsertFordJohnsonLst(std::list<int> &list)
 		straggler = true;
 	if (straggler)
 	{
-		//std::cout << "Número impar" << std::endl;
 		straggler_n = list.back();
 		list.pop_back();
-		//std::cout << "Número impar quitado" << std::endl;
 	}
 	//crear lista con parejas
 	std::list<std::pair<int,int > >	pairs;
@@ -459,23 +408,9 @@ void	mergeInsertFordJohnsonLst(std::list<int> &list)
 		if ((*nextItplList(pairs.begin(), i)).first > (*nextItplList(pairs.begin(), i)).second)
 		{
 			std::swap((*nextItplList(pairs.begin(), i)).first, (*nextItplList(pairs.begin(), i)).second);
-			/*int	swap = (*nextItplList(pairs.begin(), i)).first;
-			(*nextItplList(pairs.begin(), i)).first  = (*nextItplList(pairs.begin(), i)).second;
-			(*nextItplList(pairs.begin(), i)).second = swap;*/
 		}
-		//i++; //esto meterlo en el for
 	}
-	//ordenar lista de parejas
-	/*
-	std::cout << "Parejas sin ordenar" << std::endl;
-	for (itlp itb = pairs.begin(), ite = pairs.end(); itb != ite; itb++)
-		std::cout << "[" << itb->first << ", " << itb->second << "]" << std::endl;*/
 	recursiveInsertSort(pairs, pairs.size());
-	/*
-	std::cout << "Parejas ordenadas" << std::endl;
-	for (itlp itb = pairs.begin(), ite = pairs.end(); itb != ite; itb++)
-		std::cout << "[" << itb->first << ", " << itb->second << "]" << std::endl;
-	*/
 	//crear lista o cadena de 'a' (elemento mayor, cadena principal) y de 'b' (elemento menor)
 	std::list<int> a;
 	std::list<int> b;
@@ -484,24 +419,14 @@ void	mergeInsertFordJohnsonLst(std::list<int> &list)
 		a.push_back(itb->second);
 		b.push_back(itb->first);
 	}
-	/*std::cout << "Lista de 'a' (elementos mayores)" << std::endl;
-	for (itl itb = a.begin(), ite = a.end(); itb != ite; itb++)
-		std::cout << *itb << std::endl;
-	std::cout << "Lista de 'b' (elementos menores)" << std::endl;
-	for (itl itb = b.begin(), ite = b.end(); itb != ite; itb++)
-		std::cout << *itb << " " << std::endl;*/
-
 	//meto primer elemento de b (el menor de todos) al principio de a - ya sé que debe ser siempre el primero
 	a.push_front(*b.begin());
 	b.pop_front();
 
-	//lista de numeros de jacobsthal - meter esto en una funcion aparte
+	//lista de numeros de jacobsthal
 	std::list<int> jacobsthalSeq;
 	size_t	bSize =  b.size();
 	generateJacobsthalSequenceLst(jacobsthalSeq, bSize);
-	/*std::cout << "Secuencia de Jacobsthal" << std::endl;
-	for (itl ib = jacobsthalSeq.begin(), ie = jacobsthalSeq.end(); ib != ie; ib++)
-		std::cout << *ib << std::endl;*/
 	std::list<int>	indexes;
 	for (itl	itb = jacobsthalSeq.begin(), ite = jacobsthalSeq.end(); itb != ite; itb++)
 	{
@@ -509,17 +434,9 @@ void	mergeInsertFordJohnsonLst(std::list<int> &list)
 		if (*itb < bSize)
 			indexes.push_back(*itb);
 	}
-	/*std::cout << "Orden de índices a insertar" << std::endl;
-	for (itl ib = indexes.begin(), ie = indexes.end(); ib != ie; ib++)
-		std::cout << *ib << std::endl;
-	std::cout << "Longitud de b: " << b.size() << " Longitud de índices: " << indexes.size() << std::endl;
-	*/
-	//insercion binaria
-	int	pairIndex = 0;
-	for (itl ib = indexes.begin(), ie = indexes.end(); ib != ie; ib++)
+	//binary insert
+	for (itl ib = indexes.begin(), ie = indexes.end(); ib != ie; ib++, i++)
 	{
-		//itl		lim = std::find(a.begin(), a.end(), (*nextItplList(pairs.begin(), pairIndex)).second);
-		//binaryInsertionlist(a, a.begin(), lim, *nextItlList(b.begin(), *ib));
 		binaryInsertionlist(a, a.begin(), a.end(), *nextItlList(b.begin(), *ib));
 	}
 	if (straggler)
@@ -528,6 +445,16 @@ void	mergeInsertFordJohnsonLst(std::list<int> &list)
 	//copio lista 'a' ordenada a lista original
 	for (itl itb = a.begin(), ite = a.end(), itc = list.begin(); itb != ite; itb++, itc++)
 		*itc = *itb;
+}
+
+bool	isSortedLst(std::list<int> &lst)
+{
+	for (itl itb = lst.begin(), ite = prevItlList(lst.end(), 1); itb != ite; itb++)
+	{
+		if (*itb > *nextItlList(itb, 1))
+			return (false);
+	}
+	return (true);
 }
 
 void	sortNumbersList(char **args)
@@ -546,9 +473,7 @@ void	sortNumbersList(char **args)
 		return ;
 	timeAfter = getCurrTimeMicrosec();
 	distTime = (double)(timeAfter - timeBef) / 1000;
-	/*std::cout << "Tiempo 1: " << timeBef << " Tiempo 2: " << timeAfter << " Diferencia: "
-		<< timeAfter - timeBef << std::endl;*/
-	std::cout << "Time to perform parsing: " << distTime << std::endl;
+	std::cout << "Time to perform parsing: " << distTime << " ms" << std::endl;
 
 	//SORT
 	std::cout << "Before: ";
@@ -557,9 +482,12 @@ void	sortNumbersList(char **args)
 	mergeInsertFordJohnsonLst(nums);
 	timeAfter = getCurrTimeMicrosec();
 	distTime = (double)(timeAfter - timeBef) / 1000;
-	/*std::cout << "Tiempo 1: " << timeBef << " Tiempo 2: " << timeAfter << " Diferencia: "
-		<< timeAfter - timeBef << std::endl;*/
-	std::cout << "Time to perform sorting: " << distTime << std::endl;
+	std::cout << "Time to perform sorting: " << distTime << " ms" << std::endl;
 	std::cout << "After: ";
 	printList(nums.begin(), nums.end());
+	/*if (isSortedLst(nums))
+		std::cout << "Is sorted!" << std::endl;
+	else
+		std::cout << "Isn't sorted!" << std::endl;
+	*/
 }
