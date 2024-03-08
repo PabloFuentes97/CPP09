@@ -66,7 +66,7 @@ int RPN(std::string args)
     std::stringstream line(args);
     std::string token;
     
-    while (getline(line, token, ' '))
+    while (line >> token)
     {
         if (token.size() > 1 || !strcmpDict(token, "0123456789+-*/"))
         {
@@ -74,16 +74,7 @@ int RPN(std::string args)
             return (1);
         }
         if (strcmpDict(token, "0123456789"))
-        {
-            int num = strToInt(token);
-            if (num >= 10)
-            {
-                std::cout << "Error. Number too large!" << std::endl;
-                return (2);
-            }
             calculator.push(strToInt(token));
-        }
-            
         else
         {
             if (calculator.size() < 2)

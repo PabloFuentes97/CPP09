@@ -20,7 +20,7 @@ double	strToDouble(std::string str)
 	return (num);
 }
 
-static int checkKeyFormat(std::string const &key)
+static bool checkKeyFormat(std::string const &key)
 {
 	if (key.empty())
 		return (0);
@@ -35,7 +35,7 @@ static int checkKeyFormat(std::string const &key)
 	int					i = 0;
 	char del[] = {'-', '-', ' '};
 	while (getline(str, data, del[i]))
-	{		
+	{
 		if (i > 0 && data.size() != 2)
 			return (0);
 		dates.push_back(strToInt(data));
@@ -43,7 +43,7 @@ static int checkKeyFormat(std::string const &key)
 	}
 	if (dates.size() != 3)
 		return (0);
-	if (dates[0] < 0)
+	if (dates[0] < 2009)
 		return (0);
 	for (int i = 1; i < 3; i++)
 	{
@@ -52,7 +52,7 @@ static int checkKeyFormat(std::string const &key)
 	}
 	if (dates[1] == 2 && dates[2] > 29)
 		return (0);
-	return (1);
+	return (true);
 }
 
 int	matchStr(std::string const &str, std::string const &match)
@@ -121,9 +121,12 @@ std::map<int, double> parseDataFile(std::string file)
 	while (!data.eof())
 	{
 		getline(data, line, '\n');
-		std::stringstream str(line);
-		std::pair<int, double> keyValue = setKeyValue(str, ',');
-		mapData.insert(keyValue);
+		if (!line.empty())
+		{
+			std::stringstream str(line);
+			std::pair<int, double> keyValue = setKeyValue(str, ',');
+			mapData.insert(keyValue);
+		}
 	}
 	return (mapData);
 }
@@ -156,11 +159,14 @@ void	ParseInput(std::map<int, double> &mapData, std::string file)
 		try
 		{
 			getline(data, line, '\n');
-			std::stringstream	str(line);
-			std::pair<int, double> keyValue = setKeyValue(str, '|');
-			if (keyValue.second < 0 || keyValue.second > 1000)
-				throw valueRangeException();
-			calculateBitcoinValue(mapData, keyValue.first, keyValue.second);
+			if (!line.empty())
+			{
+				std::stringstream	str(line);
+				std::pair<int, double> keyValue = setKeyValue(str, '|');
+				if (keyValue.second < 0 || keyValue.second > 1000)
+					throw valueRangeException();
+				calculateBitcoinValue(mapData, keyValue.first, keyValue.second);
+			}
 		}
 		catch(const std::exception& e)
 		{

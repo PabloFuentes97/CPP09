@@ -50,6 +50,13 @@ int strToInt(std::string str)
     return (atoi(charptr));
 }
 
+long long int	getCurrTimeSeconds(void)
+{
+	 struct timeval time;
+    gettimeofday(&time, NULL);
+    return (time.tv_sec);
+}
+
 long long int   getCurrTimeMicrosec(void)
 {
     struct timeval time;
